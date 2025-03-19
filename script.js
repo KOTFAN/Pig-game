@@ -26,9 +26,9 @@ const newGameBtn = document.querySelector('.btn--new')
 
 function newgame() {
    document.querySelector(`.player--${currentPlayer}`).classList.remove('player--winner')
-
-
-   mainScores[0] = mainScores[1] = currentScore = currentPlayer = 0;
+   currentScore = 0;
+   document.getElementById(`current--${currentPlayer}`).textContent = currentScore;
+   mainScores[0] = mainScores[1] = currentPlayer = 0;
    isGamePlaying = true;
 
 
@@ -38,8 +38,6 @@ function newgame() {
 
 
    diceEl.classList.add('hidden')
-
-
    p0Layout.classList.add('player--active');
    p1Layout.classList.remove('player--active')
 }
