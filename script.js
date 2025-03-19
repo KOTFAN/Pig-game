@@ -1,22 +1,78 @@
 'use strict';
 
 //data
-const MainScores = [0, 0];
+const winingScore = 30;
+const mainScores = [0, 0];
+
 let isGamePlaying = true;
 let currentScore = 0;
+let diseNum;
+let currentPlayer = 0;
+
 
 //page content
 const diceEl = document.querySelector('.dice')
 const mainScoreP0 = document.getElementById('score--0')
 const mainScoreP1 = document.getElementById('score--1')
-const currentScoreP0 = document.getElementById('current--0')
-const currentScoreP1 = document.getElementById('current--1')
+const p1Layout = document.querySelector('.player--1');
+const p0Layout = document.querySelector('.player--0')
 const rollBtn = document.querySelector('.btn--roll')
-const holdBtn = document.querySelector('.btn--bold')
+const holdBtn = document.querySelector('.btn--hold')
 const newGameBtn = document.querySelector('.btn--new')
 
 
+//functions
+
+const swapPlayers = () => {
+   p0Layout.classList.toggle('player--active');
+   p1Layout.classList.toggle('player--active');
+
+   currentScore = 0;
+   document.getElementById(`current--${currentPlayer}`).textContent = currentScore;
+   currentPlayer = currentPlayer === 0 ? 1 : 0
+}
+
+
 //start conditionals
-mainScoreP0.textContent = MainScores[0];
-mainScoreP1.textContent = MainScores[1];
+mainScoreP0.textContent = mainScores[0];
+mainScoreP1.textContent = mainScores[1];
 diceEl.classList.add('hidden')
+
+
+rollBtn.addEventListener('click', () => {
+   if (isGamePlaying) {
+      diseNum = Math.trunc(Math.random() * 6 + 1)
+      diceEl.classList.remove('hidden')
+      diceEl.src = `dice-${diseNum}.png`
+
+      if (diseNum !== 1) {
+         currentScore += diseNum;
+         document.getElementById(`current--${currentPlayer}`).textContent = currentScore;
+
+      } else {
+         swapPlayers()
+      }
+   }
+
+});
+
+
+holdBtn.addEventListener('click', () => {
+
+   if (isGamePlaying) {
+      //add main score 
+      mainScores[currentPlayer] += currentScore;
+      document.getElementById(`score--${currentPlayer}`).textContent = mainScores[currentPlayer]
+
+      //is has score to win?
+      if (mainScores[currentPlayer] >= winingScore) {
+         document.querySelector(`.player--${currentPlayer}`).classList.add('player--winner')
+         isGamePlaying = false;
+         diceEl.classList.add('hidden')
+      } else {
+         swapPlayers()
+      }
+   }
+
+});
+
